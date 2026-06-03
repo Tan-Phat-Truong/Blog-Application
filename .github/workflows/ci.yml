@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # -- Setup --
+      # Setup 
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -41,7 +41,7 @@ jobs:
         working-directory: tests/playwright
         run: pnpm playwright install chromium --with-deps
 
-      # -- Build --
+      #  Build 
       - name: Sync database schema
         run: pnpm --filter @repo/db db:push
 
@@ -54,7 +54,7 @@ jobs:
       - name: Lint
         run: pnpm turbo lint
 
-      # -- Unit Tests --
+      # Unit Tests 
       - name: Unit tests - utils
         id: testUtils
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -88,7 +88,7 @@ jobs:
           timeout: 10
           max-score: 1
 
-      # -- E2E: Blog pages --
+      # E2E: Blog pages 
       - name: E2E - Blog pages
         id: npm1
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -109,7 +109,7 @@ jobs:
           sectionId: assignment-2-1-blog-client-in-next-js
           testResult: ${{ steps.npm1.outputs.result }}
 
-      # -- E2E: Admin panel --
+      # E2E: Admin panel 
       - name: E2E - Admin panel
         id: npm2
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -130,7 +130,7 @@ jobs:
           sectionId: assignment-2-2-blog-admin-in-databases
           testResult: ${{ steps.npm2.outputs.result }}
 
-      # -- E2E: API and Auth --
+      # E2E: API and Auth 
       - name: E2E - API and auth
         id: npm3
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -151,7 +151,7 @@ jobs:
           sectionId: assignment-2-3-blog-backend-in-authentication-and-authorisation
           testResult: ${{ steps.npm3.outputs.result }}
 
-      # -- E2E: Pagination --
+      # E2E: Pagination 
       - name: E2E - Pagination
         id: npm4
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -172,7 +172,7 @@ jobs:
           sectionId: assignment-2-4-blog-pagination
           testResult: ${{ steps.npm4.outputs.result }}
 
-      # -- E2E: Comments --
+      # E2E: Comments 
       - name: E2E - Comments
         id: npm5
         uses: WesternSydneyUniversity/autograding-command-grader@v2
@@ -193,7 +193,7 @@ jobs:
           sectionId: assignment-2-5-blog-comments
           testResult: ${{ steps.npm5.outputs.result }}
 
-      # -- Autograding Reporter --
+      # Autograding Reporter 
       - name: Autograding Reporter
         uses: education/autograding-grading-reporter@v1
         env:
