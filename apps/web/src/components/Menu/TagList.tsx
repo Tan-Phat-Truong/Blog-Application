@@ -24,7 +24,7 @@ export async function TagList({
           <SummaryItem
             key={item.name}
             name={item.name}
-            link={`/tags/${toUrlPath(item.name)}`}
+            link={link}
             count={item.count}
             isSelected={isSelected}
             title={`Tag / ${item.name}`}

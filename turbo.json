@@ -7,7 +7,8 @@
     "E2E",
     "TEST_DATABASE_URL",
     "DATABASE_URL",
-    "JWT_SECRET"
+    "JWT_SECRET",
+    "SKIP_ENV_VALIDATION"
   ],
   "tasks": {
     "build": {
@@ -40,6 +41,8 @@
       "dependsOn": ["dev:test"]
     },
     "test-3": {},
+    "test-4": {},
+    "test-5": {},
     "dev:test-3": {
       "dependsOn": ["dev:test"]
     },

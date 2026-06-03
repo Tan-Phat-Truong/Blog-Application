@@ -1,6 +1,7 @@
 // mocks/next/link.js
 import React from "react";
 
+/* eslint-disable react/prop-types */
 const Link = ({
   href,
   children,

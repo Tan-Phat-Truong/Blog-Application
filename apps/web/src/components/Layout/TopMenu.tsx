@@ -3,15 +3,19 @@
 import { useRouter } from "next/navigation";
 import ThemeSwitch from "../Themes/ThemeSwitcher";
 
-function debounce<T extends (...args: Any[]) => Any>(fn: T, delay = 300) {
-  let timeoutId: Any;
-  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+function debounce<Args extends unknown[]>(
+  fn: (...args: Args) => unknown,
+  delay = 300,
+) {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  return function (...args: Args) {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+    timeoutId = setTimeout(() => fn(...args), delay);
   };
 }
 
-export function TopMenu({ query }: { query?: string }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function TopMenu({ query: _query }: { query?: string }) {
   const router = useRouter();
 
   const handleSearch = debounce(
@@ -50,8 +54,10 @@ export function TopMenu({ query }: { query?: string }) {
           />
 
 
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            🔍
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
           </span>
         </div>
       </form>

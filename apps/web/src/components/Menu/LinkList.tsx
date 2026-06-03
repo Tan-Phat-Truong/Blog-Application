@@ -5,8 +5,10 @@ export function LinkList({
   children,
 }: PropsWithChildren<{ title: string }>) {
   return (
-    <div>
-      <h3>{title}</h3>
+    <div className="mt-6">
+      <h3 className="px-2 mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+        {title}
+      </h3>
       <ul>{children}</ul>
     </div>
   );

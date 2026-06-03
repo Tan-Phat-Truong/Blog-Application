@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { marked } from "marked";
 import type { Post } from "@repo/db/data";
@@ -127,6 +128,22 @@ export default function PostForm({ post }: PostFormProps) {
 
   const renderedContent = showPreview ? marked.parse(content) : "";
 
+  function insertMarkdown(before: string, after: string, placeholder: string) {
+    const el = contentRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selected = content.slice(start, end) || placeholder;
+    const newContent =
+      content.slice(0, start) + before + selected + after + content.slice(end);
+    setContent(newContent);
+    setTimeout(() => {
+      el.focus();
+      const cursor = start + before.length + selected.length;
+      el.setSelectionRange(cursor, cursor);
+    }, 0);
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">
@@ -210,14 +227,67 @@ export default function PostForm({ post }: PostFormProps) {
               }}
             />
           ) : (
-            <textarea
-              id="content"
-              ref={contentRef}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full border rounded px-3 py-2"
-              rows={8}
-            />
+            <>
+              {/* Toolbar */}
+              <div
+                className="flex gap-1 mb-1 border border-gray-200 rounded p-1 bg-gray-50"
+                data-test-id="rte-toolbar"
+              >
+                <button
+                  type="button"
+                  title="Bold"
+                  data-test-id="rte-bold"
+                  onClick={() => insertMarkdown("**", "**", "bold text")}
+                  className="px-2 py-1 text-sm font-bold hover:bg-gray-200 rounded"
+                >
+                  B
+                </button>
+                <button
+                  type="button"
+                  title="Italic"
+                  data-test-id="rte-italic"
+                  onClick={() => insertMarkdown("*", "*", "italic text")}
+                  className="px-2 py-1 text-sm italic hover:bg-gray-200 rounded"
+                >
+                  I
+                </button>
+                <button
+                  type="button"
+                  title="Heading 2"
+                  data-test-id="rte-heading"
+                  onClick={() => insertMarkdown("## ", "", "Heading")}
+                  className="px-2 py-1 text-sm hover:bg-gray-200 rounded"
+                >
+                  H2
+                </button>
+                <button
+                  type="button"
+                  title="Inline Code"
+                  data-test-id="rte-code"
+                  onClick={() => insertMarkdown("`", "`", "code")}
+                  className="px-2 py-1 text-sm font-mono hover:bg-gray-200 rounded"
+                >
+                  {"</>"}
+                </button>
+                <button
+                  type="button"
+                  title="Link"
+                  data-test-id="rte-link"
+                  onClick={() => insertMarkdown("[", "](url)", "link text")}
+                  className="px-2 py-1 text-sm hover:bg-gray-200 rounded"
+                >
+                  🔗
+                </button>
+              </div>
+              <textarea
+                id="content"
+                ref={contentRef}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+                rows={8}
+              />
+            </>
           )}
           {errors.content && (
             <p className="text-red-600 text-sm mt-1">{errors.content}</p>
@@ -247,10 +317,13 @@ export default function PostForm({ post }: PostFormProps) {
             <p className="text-red-600 text-sm mt-1">{errors.imageUrl}</p>
           )}
           {imageUrl && !errors.imageUrl && (
-            <img
+            <Image
               data-test-id="image-preview"
               src={imageUrl}
               alt="Preview"
+              width={320}
+              height={200}
+              unoptimized
               className="mt-2 max-w-xs rounded"
             />
           )}

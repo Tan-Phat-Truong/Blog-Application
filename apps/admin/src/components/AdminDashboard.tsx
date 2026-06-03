@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { Post } from "@repo/db/data";
@@ -174,9 +175,12 @@ export default function AdminDashboard({ posts }: { posts: Post[] }) {
             key={post.id}
             className="border rounded-lg p-4 flex gap-4"
           >
-            <img
+            <Image
               src={post.imageUrl}
               alt={post.title}
+              width={128}
+              height={96}
+              unoptimized
               className="w-32 h-24 object-cover rounded"
             />
             <div className="flex-1">

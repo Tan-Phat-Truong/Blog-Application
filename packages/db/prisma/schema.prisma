@@ -11,18 +11,19 @@ datasource db {
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  urlId       String   @unique
+  id          Int       @id @default(autoincrement())
+  urlId       String    @unique
   title       String
-  content     String   @default("")
-  description String   @default("")
-  imageUrl    String   @default("")
-  category    String   @default("")
-  tags        String   @default("")
-  date        DateTime @default(now())
-  views       Int      @default(0)
-  active      Boolean  @default(true)
+  content     String    @default("")
+  description String    @default("")
+  imageUrl    String    @default("")
+  category    String    @default("")
+  tags        String    @default("")
+  date        DateTime  @default(now())
+  views       Int       @default(0)
+  active      Boolean   @default(true)
   Likes       Like[]
+  Comments    Comment[]
 }
 
 model Like {
@@ -31,4 +32,13 @@ model Like {
   Post   Post   @relation(fields: [postId], references: [id])
 
   @@id([postId, userIP])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  author    String
+  body      String
+  createdAt DateTime @default(now())
+  Post      Post     @relation(fields: [postId], references: [id])
 }
