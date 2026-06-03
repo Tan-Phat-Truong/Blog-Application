@@ -1,0 +1,25 @@
+﻿﻿
+Running 19 tests using 1 worker
+
+  Γ£ô  1 [setup] ΓÇ║ tests\auth.setup.ts:9:1 ΓÇ║ authenticate assignment 2 @a2 (354ms)
+  Γ£ô  2 [chromium] ΓÇ║ tests\admin\home-screen.spec.ts:9:3 ΓÇ║ ADMIN HOME SCREEN ΓÇ║ Shows login screen @a2 (559ms)
+  Γ£ô  3 [chromium] ΓÇ║ tests\admin\home-screen.spec.ts:25:3 ΓÇ║ ADMIN HOME SCREEN ΓÇ║ Can login @a2 (1.3s)
+  Γ£ô  4 [chromium] ΓÇ║ tests\admin\home-screen.spec.ts:57:3 ΓÇ║ ADMIN HOME SCREEN ΓÇ║ Shows home screen to authorised user @a2 (801ms)
+  Γ£ô  5 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:13:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Show all posts @a2 (774ms)
+  Γ£ô  6 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:25:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Filter by content @a2 (945ms)
+  Γ£ô  7 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:50:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Filter by tag @a2 (1.1s)
+  Γ£ô  8 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:71:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Filter by date @a2 (893ms)
+  Γ£ô  9 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:94:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Combine Filters @a2 (819ms)
+  Γ£ô  10 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:114:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Sort items @a2 (786ms)
+  Γ£ô  11 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:194:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ List items @a2 (695ms)
+  Γ£ô  12 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:220:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Move to detail screen @a2 (930ms)
+  Γ£ô  13 [chromium] ΓÇ║ tests\admin\list-screen.spec.ts:236:3 ΓÇ║ ADMIN LIST SCREEN ΓÇ║ Move to create post screen @a2 (1.1s)
+  Γ£ô  14 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:9:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Authorisation @a2 (437ms)
+  Γ£ô  15 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:24:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Update post form @a2 (1.2s)
+  Γ£ô  16 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:201:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Show preview @a2 (472ms)
+  Γ£ô  17 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:220:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Restore preview @a2 (555ms)
+  Γ£ô  18 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:255:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Image Preview @a2 (435ms)
+  Γ£ô  19 [chromium] ΓÇ║ tests\admin\update-screen.spec.ts:274:3 ΓÇ║ ADMIN UPDATE SCREEN ΓÇ║ Save Button @a2 (483ms)
+
+  19 passed (17.3s)
+
