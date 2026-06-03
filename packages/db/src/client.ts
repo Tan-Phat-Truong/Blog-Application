@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { createClient as createLibSQL } from "@libsql/client";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -10,7 +12,20 @@ export const createClient = () => {
     return global.prisma;
   }
 
-  const prisma = new PrismaClient();
+  let prisma: PrismaClient;
+
+  if (process.env.TURSO_DATABASE_URL) {
+    // Production: use Turso (libsql) adapter
+    const libsql = createLibSQL({
+      url: process.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+    const adapter = new PrismaLibSQL(libsql);
+    prisma = new PrismaClient({ adapter });
+  } else {
+    // Local / CI: plain SQLite via DATABASE_URL
+    prisma = new PrismaClient();
+  }
 
   global.prisma = prisma;
   return prisma;
