@@ -13,8 +13,8 @@ const url = process.env.DATABASE_URL;
 const authToken = process.env.TURSO_AUTH_TOKEN;
 
 if (!url || !url.startsWith("libsql://")) {
-  console.error("❌ DATABASE_URL must be a libsql:// Turso URL");
-  process.exit(1);
+  console.log("ℹ Skipping Turso schema push (DATABASE_URL is not a libsql:// URL)");
+  process.exit(0);
 }
 
 console.log("⏳ Generating schema SQL from Prisma...");

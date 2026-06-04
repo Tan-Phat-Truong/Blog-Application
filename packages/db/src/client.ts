@@ -14,10 +14,10 @@ export const createClient = () => {
 
   let prisma: PrismaClient;
 
-  if (process.env.TURSO_DATABASE_URL) {
+  if (process.env.DATABASE_URL?.startsWith("libsql://")) {
     // Production: use Turso (libsql) adapter
     const libsql = createLibSQL({
-      url: process.env.TURSO_DATABASE_URL,
+      url: process.env.DATABASE_URL,
       authToken: process.env.TURSO_AUTH_TOKEN,
     });
     const adapter = new PrismaLibSQL(libsql);
