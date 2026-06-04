@@ -1,29 +1,29 @@
-﻿name: Blog CI
-
-on:
-  push:
-  pull_request:
-
-env:
-  CI: true
-  E2E: true
-  DATABASE_URL: file:./dev.db
-  PASSWORD: 123
-  JWT_SECRET: secret
-  SKIP_ENV_VALIDATION: true
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  COURSE_ID: full-stack-development-comp3036-2026
-
+﻿name: Autograding Tests
+"on":
+  - push
+  - workflow_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
 jobs:
-  build-and-test:
+  run-autograding-tests:
+    env:
+      CI: true
+      E2E: true
+      DATABASE_URL: file:./dev.db
+      PASSWORD: 123
+      JWT_SECRET: secret
+      SKIP_ENV_VALIDATION: true
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      COURSE_ID: full-stack-development-comp3036-2026
     runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
     steps:
-
-      # Setup 
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PNPM
+      - name: Install PNPM
         uses: pnpm/action-setup@v4
         with:
           version: 10.2.0
@@ -37,15 +37,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Playwright browsers
+      - name: Install Playwright Browsers
         working-directory: tests/playwright
         run: pnpm playwright install chromium --with-deps
 
-      #  Build 
-      - name: Sync database schema
+      - name: Push Database
         run: pnpm --filter @repo/db db:push
 
-      - name: Build
+      - name: Build the project
         run: pnpm turbo build
 
       - name: Type check
@@ -54,41 +53,47 @@ jobs:
       - name: Lint
         run: pnpm turbo lint
 
-      # Unit Tests 
-      - name: Unit tests - utils
+      ####################
+      # UNIT TESTS
+      ####################
+
+      - name: Test - Utils
         id: testUtils
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: packages/utils
-          test-name: Utils
+          test-name: Unit 1 - Utils
           command: pnpm test
           timeout: 10
           max-score: 1
 
-      - name: Unit tests - ui
+      - name: Test - Ui
         id: testUi
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: packages/ui
-          test-name: UI Components
+          test-name: Unit 2 - UI
           command: pnpm test
           timeout: 10
           max-score: 1
 
-      - name: Unit tests - web
+      - name: Test - Web
         id: testWeb
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: apps/web
-          test-name: Web Components
+          test-name: Unit 3 - Web Components
           command: pnpm test
           timeout: 10
           max-score: 1
 
-      # Start servers for E2E tests
+      ####################
+      # START SERVERS
+      ####################
+
       - name: Start web server
         run: pnpm --filter web start -p 3001 &
 
@@ -96,22 +101,24 @@ jobs:
         run: pnpm --filter admin start -p 3002 &
 
       - name: Wait for servers
-        run: |
-          npx wait-on http://localhost:3001 http://localhost:3002 --timeout 60000
+        run: npx wait-on http://localhost:3001 http://localhost:3002 --timeout 60000
 
-      # E2E: Blog pages 
-      - name: E2E - Blog pages
+      ####################
+      #TEST 1
+      ####################
+
+      - name: Test Assignment 1 with Playwright
         id: npm1
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: .
-          test-name: Blog Pages
+          test-name: Part 1 - Client
           command: pnpm turbo test-1
           timeout: 10
           max-score: 1
 
-      - name: Report blog pages
+      - name: Report Assignment 1 to SkillPies
         if: always()
         continue-on-error: true
         uses: tomitrescak/skillpies-reporting@v1.0
@@ -120,19 +127,22 @@ jobs:
           sectionId: assignment-2-1-blog-client-in-next-js
           testResult: ${{ steps.npm1.outputs.result }}
 
-      # E2E: Admin panel 
-      - name: E2E - Admin panel
+      ####################
+      # TEST 2
+      ####################
+
+      - name: Test Assignment 2 with Playwright
         id: npm2
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: .
-          test-name: Admin Panel
+          test-name: Part 2 - Admin
           command: pnpm turbo test-2
           timeout: 10
           max-score: 1
 
-      - name: Report admin panel
+      - name: Report Assignment 2 to SkillPies
         if: always()
         continue-on-error: true
         uses: tomitrescak/skillpies-reporting@v1.0
@@ -141,19 +151,22 @@ jobs:
           sectionId: assignment-2-2-blog-admin-in-databases
           testResult: ${{ steps.npm2.outputs.result }}
 
-      # E2E: API and Auth 
-      - name: E2E - API and auth
+      ####################
+      # TEST 3
+      ####################
+
+      - name: Test Assignment 3 with Playwright
         id: npm3
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: .
-          test-name: API and Auth
+          test-name: Part 3 - Backend
           command: pnpm turbo test-3
           timeout: 10
           max-score: 1
 
-      - name: Report API and auth
+      - name: Report Assignment 3 to SkillPies
         if: always()
         continue-on-error: true
         uses: tomitrescak/skillpies-reporting@v1.0
@@ -162,19 +175,22 @@ jobs:
           sectionId: assignment-2-3-blog-backend-in-authentication-and-authorisation
           testResult: ${{ steps.npm3.outputs.result }}
 
-      # E2E: Pagination 
-      - name: E2E - Pagination
+      ####################
+      # TEST 4
+      ####################
+
+      - name: Test Assignment 4 with Playwright
         id: npm4
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: .
-          test-name: Pagination
+          test-name: Part 4 - Pagination
           command: pnpm turbo test-4
           timeout: 10
           max-score: 1
 
-      - name: Report pagination
+      - name: Report Assignment 4 to SkillPies
         if: always()
         continue-on-error: true
         uses: tomitrescak/skillpies-reporting@v1.0
@@ -183,19 +199,22 @@ jobs:
           sectionId: assignment-2-4-blog-pagination
           testResult: ${{ steps.npm4.outputs.result }}
 
-      # E2E: Comments 
-      - name: E2E - Comments
+      ####################
+      # TEST 5
+      ####################
+
+      - name: Test Assignment 5 with Playwright
         id: npm5
         uses: WesternSydneyUniversity/autograding-command-grader@v2
         continue-on-error: true
         with:
           working-directory: .
-          test-name: Comments
+          test-name: Part 5 - Comments
           command: pnpm turbo test-5
           timeout: 10
           max-score: 1
 
-      - name: Report comments
+      - name: Report Assignment 5 to SkillPies
         if: always()
         continue-on-error: true
         uses: tomitrescak/skillpies-reporting@v1.0
@@ -204,7 +223,10 @@ jobs:
           sectionId: assignment-2-5-blog-comments
           testResult: ${{ steps.npm5.outputs.result }}
 
-      # Autograding Reporter 
+      ####################
+      # AUTOGRADING REPORTER
+      ####################
+
       - name: Autograding Reporter
         uses: education/autograding-grading-reporter@v1
         env:
@@ -218,54 +240,3 @@ jobs:
           TESTWEB_RESULTS: "${{ steps.testWeb.outputs.result }}"
         with:
           runners: npm1,npm2,npm3,npm4,npm5,testUtils,testUi,testWeb
-
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.2.0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Push DB schema to Turso
-        run: pnpm --filter @repo/db db:push:turso
-        env:
-          DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-          SKIP_ENV_VALIDATION: true
-
-      # Deploy web app
-      - name: Deploy web to Vercel
-        working-directory: .
-        run: |
-          npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
-          npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
-
-      # Deploy admin app
-      - name: Deploy admin to Vercel
-        working-directory: .
-        run: |
-          npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
-          npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_ADMIN_PROJECT_ID }}
