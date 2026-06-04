@@ -16,11 +16,13 @@ export default defineWorkspace([
   {
     define: {
       "process.env": {},
+      process: { env: {} },
     },
     resolve: {
       alias: {
         // Adjust the path as needed based on your project structure
         "next/link": path.resolve(__dirname, "src/mocks/link"),
+        "next/image": path.resolve(__dirname, "src/mocks/image"),
       },
     },
     plugins: [react()],
