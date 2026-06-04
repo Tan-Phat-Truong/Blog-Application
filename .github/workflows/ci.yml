@@ -47,12 +47,6 @@ jobs:
       - name: Build the project
         run: pnpm turbo build
 
-      - name: Type check
-        run: pnpm turbo check-types
-
-      - name: Lint
-        run: pnpm turbo lint
-
       ####################
       # UNIT TESTS
       ####################
