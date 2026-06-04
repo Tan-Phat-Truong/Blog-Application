@@ -16,7 +16,6 @@ jobs:
       JWT_SECRET: secret
       SKIP_ENV_VALIDATION: true
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      COURSE_ID: full-stack-development-comp3036-2026
     runs-on: ubuntu-latest
     if: github.actor != 'github-classroom[bot]'
     steps:
@@ -112,15 +111,6 @@ jobs:
           timeout: 10
           max-score: 1
 
-      - name: Report Assignment 1 to SkillPies
-        if: always()
-        continue-on-error: true
-        uses: tomitrescak/skillpies-reporting@v1.0
-        with:
-          courseId: ${{ env.COURSE_ID }}
-          sectionId: assignment-2-1-blog-client-in-next-js
-          testResult: ${{ steps.npm1.outputs.result }}
-
       ####################
       # TEST 2
       ####################
@@ -135,15 +125,6 @@ jobs:
           command: pnpm turbo test-2
           timeout: 10
           max-score: 1
-
-      - name: Report Assignment 2 to SkillPies
-        if: always()
-        continue-on-error: true
-        uses: tomitrescak/skillpies-reporting@v1.0
-        with:
-          courseId: ${{ env.COURSE_ID }}
-          sectionId: assignment-2-2-blog-admin-in-databases
-          testResult: ${{ steps.npm2.outputs.result }}
 
       ####################
       # TEST 3
@@ -160,15 +141,6 @@ jobs:
           timeout: 10
           max-score: 1
 
-      - name: Report Assignment 3 to SkillPies
-        if: always()
-        continue-on-error: true
-        uses: tomitrescak/skillpies-reporting@v1.0
-        with:
-          courseId: ${{ env.COURSE_ID }}
-          sectionId: assignment-2-3-blog-backend-in-authentication-and-authorisation
-          testResult: ${{ steps.npm3.outputs.result }}
-
       ####################
       # TEST 4
       ####################
@@ -184,15 +156,6 @@ jobs:
           timeout: 10
           max-score: 1
 
-      - name: Report Assignment 4 to SkillPies
-        if: always()
-        continue-on-error: true
-        uses: tomitrescak/skillpies-reporting@v1.0
-        with:
-          courseId: ${{ env.COURSE_ID }}
-          sectionId: assignment-2-4-blog-pagination
-          testResult: ${{ steps.npm4.outputs.result }}
-
       ####################
       # TEST 5
       ####################
@@ -207,15 +170,6 @@ jobs:
           command: pnpm turbo test-5
           timeout: 10
           max-score: 1
-
-      - name: Report Assignment 5 to SkillPies
-        if: always()
-        continue-on-error: true
-        uses: tomitrescak/skillpies-reporting@v1.0
-        with:
-          courseId: ${{ env.COURSE_ID }}
-          sectionId: assignment-2-5-blog-comments
-          testResult: ${{ steps.npm5.outputs.result }}
 
       ####################
       # AUTOGRADING REPORTER
