@@ -212,9 +212,6 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    env:
-      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -234,9 +231,11 @@ jobs:
         run: pnpm install
 
       - name: Push DB schema to Turso
-        run: pnpm --filter @repo/db db:push
+        run: pnpm --filter @repo/db db:push:turso
         env:
           DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          SKIP_ENV_VALIDATION: true
 
       # Deploy web app
       - name: Deploy web to Vercel
