@@ -88,6 +88,17 @@ jobs:
           timeout: 10
           max-score: 1
 
+      # Start servers for E2E tests
+      - name: Start web server
+        run: pnpm --filter web start -p 3001 &
+
+      - name: Start admin server
+        run: pnpm --filter admin start -p 3002 &
+
+      - name: Wait for servers
+        run: |
+          npx wait-on http://localhost:3001 http://localhost:3002 --timeout 60000
+
       # E2E: Blog pages 
       - name: E2E - Blog pages
         id: npm1
