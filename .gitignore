@@ -13,6 +13,8 @@ dev.db
 .env.development.local
 .env.test.local
 .env.production.local
+vercel-admin.env
+vercel-web.env
 
 # Testing
 coverage
