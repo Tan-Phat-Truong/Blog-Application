@@ -8,6 +8,7 @@
  */
 import { createClient } from "@libsql/client";
 import { execSync } from "child_process";
+import { fileURLToPath } from "url";
 
 const url = process.env.DATABASE_URL;
 const authToken = process.env.TURSO_AUTH_TOKEN;
@@ -22,7 +23,7 @@ const sql = execSync(
   "npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script",
   {
     encoding: "utf-8",
-    cwd: new URL(".", import.meta.url).pathname,
+    cwd: fileURLToPath(new URL(".", import.meta.url)),
     env: {
       ...process.env,
       // prisma migrate diff needs a dummy sqlite URL for the from-state
@@ -34,11 +35,17 @@ const sql = execSync(
 console.log("⏳ Connecting to Turso...");
 const client = createClient({ url, authToken });
 
-// Split into individual statements, skip comments and empty lines
+// Split into individual statements, strip comment lines, skip empty
 const statements = sql
   .split(";")
-  .map((s) => s.trim())
-  .filter((s) => s.length > 0 && !s.startsWith("--") && !s.startsWith("/*"));
+  .map((s) =>
+    s
+      .split("\n")
+      .filter((line) => !line.trim().startsWith("--") && !line.trim().startsWith("/*"))
+      .join("\n")
+      .trim()
+  )
+  .filter((s) => s.length > 0);
 
 console.log(`⏳ Running ${statements.length} SQL statements...`);
 for (const stmt of statements) {
